@@ -4,6 +4,11 @@
 # TODO: Change your-zone-id according to your DNS zone ID in Cloudflare
 # ---
 
+variable "cloudflare_zone_id" {
+    type = string
+    sensitive = true
+}
+
 resource "kubernetes_namespace" "nginx1" {
 
     depends_on = [
