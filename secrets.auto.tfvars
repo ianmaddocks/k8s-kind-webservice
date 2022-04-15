@@ -1,0 +1,2 @@
+civo_token = "YnUrpAjqZsFCKZMsjKSWkJ9FqThRTbL1StGVQBAiWMg2TR7f5S"
+cloudflare_api_key = "84314bb6c2602ca15119916cd28cfad9c3e5c"
