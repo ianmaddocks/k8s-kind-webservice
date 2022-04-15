@@ -28,6 +28,7 @@ terraform {
 
 variable "civo_token" {
     type = string
+    sensitive = true
 }
 
 variable "cloudflare_email" {
@@ -36,6 +37,7 @@ variable "cloudflare_email" {
 
 variable "cloudflare_api_key" {
     type = string
+    sensitive = true
 }
 
 provider "civo" {
@@ -43,7 +45,7 @@ provider "civo" {
     
     # TODO: (optional) change region to your desired datacenter location
     # ---
-    # region = "FRA1"
+    region = "LON1"
 }
 
 provider "helm" {
