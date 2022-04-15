@@ -100,7 +100,7 @@ spec:
     name: cloudflare-prod
     kind: ClusterIssuer
   dnsNames:
-  - 'your-domain'   
+  - 'nginx1.maddocks.name'   
     YAML
 }
 
@@ -117,7 +117,7 @@ resource "kubernetes_ingress_v1" "nginx1" {
     spec {
         rule {
 
-            host = "your-domain"
+            host = "nginx1.maddocks.name"
 
             http {
 
@@ -139,15 +139,22 @@ resource "kubernetes_ingress_v1" "nginx1" {
 
         tls {
           secret_name = "nginx1"
-          hosts = ["your-domain"]
+          hosts = ["nginx1.maddocks.name"]
         }
     }
 }
 
 resource "cloudflare_record" "clcreative-main-cluster" {
-    zone_id = "your-zone-id"
-    name = "your-domain"
-    value =  data.civo_loadbalancer.traefik_lb.public_ip
+    zone_id = var.cloudflare_zone_id #"your-zone-id"
+    name = "nginx1.maddocks.name"
+    value =  data.civo_loadbalancer.traefik_lb.public_ip #the public IP
     type = "A"
     proxied = false
 }
+
+output "public_ip_addr" {
+  value       = data.civo_loadbalancer.traefik_lb.public_ip
+  description = "The public IP address of the nginx server instance."
+}
+
+
