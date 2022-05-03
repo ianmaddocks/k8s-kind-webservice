@@ -36,7 +36,7 @@ resource "kubernetes_deployment" "microservice2_deployment" {
       }
       spec {
         container {
-          image = "ianmaddocks/microservice2:0.0.2"
+          image = "ianmaddocks/microservice2:v0.0.3.6"
           name  = "microservice2"
 
           resources {
@@ -53,7 +53,7 @@ resource "kubernetes_deployment" "microservice2_deployment" {
           liveness_probe {
             http_get {
               path = "/healthz"
-              port = 8000
+              port = 80
 
               http_header {
                 name  = "X-Custom-Header"
@@ -81,9 +81,9 @@ resource "kubernetes_ingress" "microservice2_ingress" {
         path {
           backend {
             service_name = "microservice2-svc"
-            service_port = 8000
+            service_port = 80
           }
-          path = "/home"
+          path = "/version"
         }
       }
     }
@@ -101,7 +101,7 @@ resource "kubernetes_service" "microservice2_svc" {
       app = kubernetes_deployment.microservice2_deployment.metadata.0.labels.app
     }
     port {
-      port  = 8000
+      port  = 80
     }
     type = "ClusterIP"
   }
