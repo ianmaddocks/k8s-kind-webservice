@@ -36,7 +36,7 @@ resource "kubernetes_deployment" "microservice2_deployment" {
       }
       spec {
         container {
-          image = "ianmaddocks/microservice2:v0.0.3.6"
+          image = "ianmaddocks/microservice2:v0.0.3.7"
           name  = "microservice2"
 
           resources {
