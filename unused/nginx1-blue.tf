@@ -4,10 +4,6 @@
 # TODO: Change your-zone-id according to your DNS zone ID in Cloudflare
 # ---
 
-variable "cloudflare_zone_id" {
-    type = string
-    sensitive = true
-}
 
 resource "kubernetes_namespace" "nginx-blue" {
 
@@ -34,6 +30,7 @@ metadata:
   labels:
     run: nginx
   name: nginx-deploy-blue
+  namespace: nginx1
 spec:
   replicas: 1
   selector:
@@ -64,19 +61,19 @@ spec:
 }
 
 
-resource "kubernetes_service" "nginx1" {
+resource "kubernetes_service" "nginx1-blue" {
 
     depends_on = [
-        kubernetes_namespace.nginx-blue
+        kubernetes_namespace.nginx1
     ]
 
     metadata {
         name = "nginx-blue"
-        namespace = "nginginx-bluenx1"
+        namespace = "nginginx-blue"
     }
     spec {
         selector = {
-            app = "nginginx-bluenx1"
+            app = "nginginx-blue"
         }
         port {
             port = 80
@@ -140,7 +137,7 @@ resource "kubernetes_ingress_v1" "nginx-blue" {
         }
     }
 }
-
+/*
 resource "cloudflare_record" "clcreative-main-cluster" {
     zone_id = var.cloudflare_zone_id #"your-zone-id"
     name = "nginx-blue.maddocks.name"
@@ -153,5 +150,5 @@ output "public_ip_addr" {
   value       = data.civo_loadbalancer.traefik_lb.public_ip
   description = "The public IP address of the nginx server instance."
 }
-
+*/
 

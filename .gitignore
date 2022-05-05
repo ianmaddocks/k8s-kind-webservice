@@ -1,4 +1,5 @@
 secrets.auto.tfvars
 .*
+!.terraformignore
 terraform.tfstate
 terraform.tfstate.*

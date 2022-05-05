@@ -109,7 +109,6 @@ spec:
     YAML
 }
 
-
 resource "kubernetes_ingress_v1" "nginx1" {
 
     depends_on = [kubernetes_namespace.nginx1]
@@ -161,5 +160,3 @@ output "public_ip_addr" {
   value       = data.civo_loadbalancer.traefik_lb.public_ip
   description = "The public IP address of the nginx server instance."
 }
-
-
