@@ -1,15 +1,19 @@
-#microservice2.tf
-
 provider "kubernetes" {
   config_path = pathexpand(var.kind_cluster_config_path)
   alias = "alias"
 }
 
-resource "kubernetes_deployment" "microservice2_deployment" {
+resource "time_sleep" "wait_for_ingress" {
+    depends_on = [helm_release.ingress_nginx]
+    create_duration = "1s"
+}
+
+resource "kubernetes_deployment" "webapp1_deployment" {
+  depends_on = [time_sleep.wait_for_ingress]
   metadata {
-    name = "terraform-microservice2"
+    name = "webapp1"
     labels = {
-      app = "microservice2"
+      app = "webapp1"
     }
     namespace = "default"
   }
@@ -17,7 +21,7 @@ resource "kubernetes_deployment" "microservice2_deployment" {
     replicas = 1
     selector {
       match_labels = {
-        app = "microservice2"
+        app = "webapp1"
       }
     }
     min_ready_seconds   = "5"
@@ -31,13 +35,13 @@ resource "kubernetes_deployment" "microservice2_deployment" {
     template {
       metadata {
         labels = {
-           app = "microservice2"
+           app = "webapp1"
         }
       }
       spec {
         container {
-          image = "ianmaddocks/microservice2:v0.0.3.7"
-          name  = "microservice2"
+          image = "ianmaddocks/webapp1:latest"
+          name  = "webapp1"
 
           resources {
             limits = {
@@ -67,12 +71,11 @@ resource "kubernetes_deployment" "microservice2_deployment" {
       }
     }
   }
-  depends_on = [helm_release.ingress_nginx]
 }
 
-resource "kubernetes_ingress" "microservice2_ingress" {
+resource "kubernetes_ingress" "webapp1_ingress" {
   metadata {
-    name = "microservice2-ingress"
+    name = "webapp1-ingress"
     namespace = "default"
   }
   spec { 
@@ -80,30 +83,30 @@ resource "kubernetes_ingress" "microservice2_ingress" {
       http {
         path {
           backend {
-            service_name = "microservice2-svc"
+            service_name = "webapp1-svc"
             service_port = 80
           }
-          path = "/version"
+          path = "/"
         }
       }
     }
   }
-  depends_on = [kubernetes_deployment.microservice2_deployment]
+  depends_on = [kubernetes_deployment.webapp1_deployment]
 }
 
-resource "kubernetes_service" "microservice2_svc" {
+resource "kubernetes_service" "webapp1_svc" {
   metadata {
-    name = "microservice2-svc"
+    name = "webapp1-svc"
     namespace = "default"
   }
   spec {
     selector = {
-      app = kubernetes_deployment.microservice2_deployment.metadata.0.labels.app
+      app = kubernetes_deployment.webapp1_deployment.metadata.0.labels.app
     }
     port {
       port  = 80
     }
     type = "ClusterIP"
   }
-  depends_on = [kubernetes_deployment.microservice2_deployment]
+  depends_on = [kubernetes_deployment.webapp1_deployment]
 }

@@ -3,7 +3,7 @@
 variable "kind_cluster_name" {
   type        = string
   description = "The name of the cluster."
-  default     = "webapp"
+  default     = "webapp-db"
 }
 
 variable "kind_cluster_config_path" {

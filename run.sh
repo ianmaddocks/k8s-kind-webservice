@@ -7,6 +7,8 @@ terraform apply -auto-approve || true
 sleep 1
 terraform apply -auto-approve
 
+kubectl apply -f ./postgres
+
 sleep 2
-printf "\nYou should see '/version' as a reponse below:\n"
-curl http://localhost/version
+printf "\nYou should see '/info' as a reponse below:\n"
+curl http://localhost/info
